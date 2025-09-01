@@ -45,8 +45,8 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## Create your API Keys:
 // For Web Search and AI Models
-**Tavily**: [https://app.tavily.com/home] (https://app.tavily.com/home)
-**Google Gemini**: [https://aistudio.google.com/apikey] (https://aistudio.google.com/apikey)
+- **Tavily**: [https://app.tavily.com/home](https://app.tavily.com/home)
+- **Google Gemini**: [https://aistudio.google.com/apikey](https://aistudio.google.com/apikey)
 
 
 ## Tech Stack
