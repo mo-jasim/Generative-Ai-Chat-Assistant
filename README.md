@@ -14,18 +14,21 @@ A Next.js-powered AI chat assistant with web search capabilities, powered by Goo
 ## Getting Started
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/mo-jasim/Generative-Ai-Chat-Assistant.git
 cd Generative-Ai-Chat-Assistant
 ```
 
 2. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 3. Set up environment variables:
-Create a `.env.local` file with:
+   Create a `.env.local` file with:
+
 ```bash
 GEMINI_API_KEY=your_gemini_api_key
 TAVILY_API_KEY=your_tavily_api_key
@@ -33,11 +36,18 @@ GEMINI_MODEL=gemini-2.0-flash
 ```
 
 4. Run the development server:
+
 ```bash
 pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the application.
+
+## Create your API Keys:
+// For Web Search and AI Models
+**Tavily**: [https://app.tavily.com/home] (https://app.tavily.com/home)
+**Google Gemini**: [https://aistudio.google.com/apikey] (https://aistudio.google.com/apikey)
+
 
 ## Tech Stack
 
