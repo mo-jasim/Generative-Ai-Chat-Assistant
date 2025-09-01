@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Generative AI Chat Assistant
+
+A Next.js-powered AI chat assistant with web search capabilities, powered by Google Gemini and Tavily search.
+
+## Features
+
+- 💬 Interactive chat interface with Google Gemini
+- 🔍 Real-time web search integration via Tavily
+- 🎨 Beautiful UI with animated components
+- 📱 Responsive design for all devices
+- 🔄 Conversation threading and persistence
+- ⚡ Built with Next.js 15 and Turbopack
 
 ## Getting Started
 
-First, run the development server:
-
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/mo-jasim/Generative-Ai-Chat-Assistant.git
+cd Generative-Ai-Chat-Assistant
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+pnpm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+Create a `.env.local` file with:
+```bash
+GEMINI_API_KEY=your_gemini_api_key
+TAVILY_API_KEY=your_tavily_api_key
+GEMINI_MODEL=gemini-2.0-flash
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run the development server:
+```bash
+pnpm dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework**: Next.js 15 with Turbopack
+- **AI Model**: Google Gemini via OpenAI-compatible API
+- **Search**: Tavily API for real-time web search
+- **Styling**: Tailwind CSS with custom animations
+- **Package Manager**: pnpm
+- **Deployment**: Vercel-ready
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Developed by
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[Mo~Jasim](https://www.mojasim.com)
