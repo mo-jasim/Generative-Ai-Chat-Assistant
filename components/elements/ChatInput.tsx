@@ -77,7 +77,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onMessagesChange }) => {
     onMessagesChange?.(false);
   };
 
-  // Listen for global reset events (dispatched by Header Share button)
+  // Listen for global reset events
   useEffect(() => {
     const handler = () => resetChat();
     if (typeof window !== "undefined") {
@@ -90,7 +90,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ onMessagesChange }) => {
     };
   }, []);
 
-  // Submit a message (used by form submit and example buttons)
   const submitMessage = async (userMessageContent: string) => {
     const trimmed = userMessageContent.trim();
     if (!trimmed || isLoading) return;
@@ -131,22 +130,18 @@ const ChatInput: React.FC<ChatInputProps> = ({ onMessagesChange }) => {
     await submitMessage(message);
   };
 
-  // example question
   const handleExampleClick = (question: string) => {
     setMessage(question);
     submitMessage(question);
   };
 
   const exampleQuestions = [
-    "What is current weather?",
-    "Which LLM you're?",
-    "Explain rag?",
-    "who are you?",
-    "who mohammad jasim?",
-    "what is AI?",
-    "who is Elon Musk?",
-    "what is next js?",
-    "What is tool calling?",
+    "What is Coders Gyan's vacation policy?",
+    "What are the remote work guidelines?",
+    "What is the maternity leave policy?",
+    "What are the security policy requirements?",
+    "What are the content creation guidelines?",
+    "What is the code of conduct policy?",
   ];
 
   const hasMessages = chatMessages.length > 0;
@@ -155,9 +150,8 @@ const ChatInput: React.FC<ChatInputProps> = ({ onMessagesChange }) => {
     <>
       {hasMessages && (
         <div className="flex-1 h-full overflow-y-auto scrollbar-hide mb-20">
-          {/* Back button */}
           {showBackButton && (
-            <div className="max-w-screen-lg mx-auto mb-3 px-2 max-md:pl-6">
+            <div className="max-w-screen-xl mx-auto mb-3 px-2 max-md:pl-6">
               <button
                 type="button"
                 onClick={resetChat}
@@ -170,7 +164,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onMessagesChange }) => {
           )}
 
           {/* Ai & User tag */}
-          <div className="max-w-screen-lg mx-auto space-y-6 max-md:px-4">
+          <div className="max-w-screen-xl mx-auto space-y-6 max-md:px-4">
             {chatMessages.map((msg) => (
               <div
                 key={msg.id}
@@ -225,7 +219,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onMessagesChange }) => {
       <div className="w-full">
         <form
           onSubmit={handleSubmit}
-          className="max-w-screen-lg mx-auto fixed bottom-0 max-md:bottom-6 left-0 right-0 flex flex-col max-md:px-4 bg-[#0A0A0A]"
+          className="max-w-screen-xl mx-auto fixed bottom-0 max-md:bottom-6 left-0 right-0 flex flex-col max-md:px-4 bg-[#0A0A0A]"
         >
           <div className="flex items-center gap-2 md:gap-3 py-3 px-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl hover:bg-white/15 hover:border-white/30 transition-all duration-300 relative">
             <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
@@ -252,7 +246,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onMessagesChange }) => {
             <button
               type="submit"
               disabled={!message.trim() || isLoading}
-              className="shrink-0 p-2 md:p-3 rounded-full bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:hover:scale-100 hover:shadow-lg hover:shadow-white/20"
+              className="cursor-pointer shrink-0 p-2 md:p-3 rounded-full bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:hover:scale-100 hover:shadow-lg hover:shadow-white/20"
             >
               <FiSend className="w-4 h-4 md:w-5 md:h-5 text-black" />
             </button>
@@ -269,14 +263,16 @@ const ChatInput: React.FC<ChatInputProps> = ({ onMessagesChange }) => {
 
         {/* Example Questions */}
         {!hasMessages && (
-          <div className="max-w-screen-lg mx-auto lg:mt-4 max-md:px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:py-2">
+          <div className="max-w-screen-xl mx-auto lg:mt-4 max-md:px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:py-2">
               {exampleQuestions.map((question, index) => (
                 <button
                   key={question}
                   onClick={() => handleExampleClick(question)}
                   disabled={isLoading}
-                  className="group py-3 px-6 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed text-left"
+                  className={`group py-3 px-6 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-lg hover:bg-white/10 hover:border-white/20 transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed text-left ${
+                    index > 2 ? "max-md:hidden" : ""
+                  }`}
                   style={{
                     animationDelay: `${index * 100}ms`,
                     animationDuration: "600ms",

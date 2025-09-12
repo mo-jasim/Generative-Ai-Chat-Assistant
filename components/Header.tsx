@@ -7,22 +7,22 @@ import { FiMessageSquare } from "react-icons/fi";
 const Header = () => {
   return (
     <header className="sticky top-0 z-[99] py-4 max-md:px-4 border-b border-white/10 backdrop-blur-sm">
-      <div className="max-w-screen-lg mx-auto flex items-center justify-between">
+      <div className="max-w-screen-xl mx-auto flex items-center justify-between">
         <Link
-          href="https://www.mojasim.com"
+          href="https://codersgyan.com/"
           target="_blank"
-          className="flex items-center gap-2"
+          className="flex items-center gap-4"
         >
           <Image
-            src="/JasimImg.png"
+            src="/coders.svg"
             alt="Mo-Jasim"
             width={300}
             height={200}
-            className="w-8 h-8 rounded-full object-cover"
+            className="w-10 h-10 rounded-full object-cover bg-white border border-am"
           />
 
           <div className="text-[18px] font-[600] text-white cursor-pointer max-sm:text-[16px]">
-            Mo~Jasim
+            Coder's Gyan
           </div>
         </Link>
 

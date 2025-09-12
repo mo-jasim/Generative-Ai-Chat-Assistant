@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { tavily as createTavilyClient } from "@tavily/core";
 import NodeCache from "node-cache";
+import { searchSimilarDocuments } from "@/lib/vectorStore";
 
 export const runtime = "nodejs";
 
@@ -33,6 +34,33 @@ async function webSearch({ query }: { query: string }) {
   }
 }
 
+// Tool: search documents in vector store (RAG)
+async function searchDocuments({ query }: { query: string }) {
+  console.log("Tool Called: searchDocuments with query:", query);
+  try {
+    const results = await searchSimilarDocuments(query, 4);
+
+    if (results.length === 0) {
+      return "No relevant documents found in the knowledge base.";
+    }
+
+    const formattedResults = results
+      .map((doc, index) => {
+        const title =
+          doc.metadata.title ||
+          doc.metadata.fileName ||
+          `Document ${index + 1}`;
+        return `Title: ${title}\nContent: ${doc.pageContent}\n---`;
+      })
+      .join("\n\n");
+
+    return `Found ${results.length} relevant documents:\n\n${formattedResults}`;
+  } catch (error) {
+    console.error("Error in searchDocuments tool:", error);
+    return "Error occurred while searching the knowledge base.";
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     if (!process.env.GEMINI_API_KEY) {
@@ -53,32 +81,81 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // System prompt and tool definition
+    // System prompt for Coder's Gyan AI Assistant
     const systemPrompt = `
-      You are a smart personal assistant. who can answer regarding anything intelligently, professionally and in wiser and devious manner. You always have to act like a human. To Feel the other person that they're talking with human not ai. And make sure you are talking and giving The output in a simple and friendly language.
+      You are Coder's Gyan Assistant, a smart AI assistant built by Mohammad Jasim specifically for Coder's Gyan Company and it's employees and students. You are designed to be helpful, professional, and human-like in your interactions.
 
-      If you know the answer to a question, answer it directly in plain English.
-      If the answer requires real-time, local, or up-to-date information, or if you don’t know the answer, use the available tools to find it.
-      You have access to the following tool:
-      webSearch(query: string): Use this to search the internet for current or unknown information.
-      Decide when to use your own knowledge and when to use the tool.
-      Do not mention the tool unless needed.
+      PRIMARY ROLE: 
+      You are primarily a Coder's Gyan company assistant. Your main expertise is answering questions about:
 
-      Examples:
-      Q: What is the capital of France?
-      A: The capital of France is Paris.
+      COMPANY KNOWLEDGE (Priority 1):
+      - Company policies, procedures, and guidelines
+      - HR policies, leave management, and employee benefits  
+      - Course development lifecycle and content creation standards
+      - YouTube content guidelines and branding requirements
+      - Remote work policies and security protocols
+      - Team structure, leadership, and reporting hierarchy
+      - Student support processes and community rules
+      - Technical workflows, code review processes, and QA standards
+      - Training programs, referral schemes, and internal events
+      - Emergency contacts and escalation procedures
 
-      Q: What’s the weather in Bihar right now?
-      A: (use the search tool to find the latest weather)
+      COMPANY CONTEXT:
+      Coder's Gyan is a leading Indian EdTech company founded in 2021, specializing in practical web development education. We have:
+      - 30,000+ trained students
+      - 100K+ YouTube subscribers  
+      - 20+ flagship courses
+      - 50+ industry mentors
+      - Leadership: CEO Rakesh Kohali, CTO Aditi Sinha, COO Deepak Menon
 
-      Q: Tell me the latest IT news.
-      A: (use the search tool to get the latest news)
+      SECONDARY ROLE (Priority 2):
+      For non-company questions, you can provide general assistance on topics like:
+      - Web development and programming concepts
+      - Technology trends and industry insights
+      - General knowledge and information
+      - Current events and real-time information (using web search when needed)
 
-      Note: One more thing you will have to keep it in mind like whatever I ask even though it is a single word, or single character you will have to Answer that.
-      Example: hi, oh, ok yep
+      RESPONSE GUIDELINES:
+      1. For Company Questions: Answer confidently using your internal knowledge
+      2. For General Questions: Provide helpful responses but acknowledge when you need to search for current information
+      3. Communication Style: 
+        - Be friendly, professional, and human-like
+        - Use simple, clear language
+        - Respond to single words/characters naturally (hi, ok, yes, etc.)
+        - Never mention you're an AI unless directly asked
+        - Act conversational and engaging
 
-      current date and time: ${new Date().toUTCString()}
-    `;
+      **TOOL USAGE:**
+      You have access to webSearch(query: string) for:
+      - Real-time information (weather, current news, stock prices)
+      - Recent developments you might not know about
+      - Specific factual queries requiring up-to-date data
+
+      EXAMPLES:
+
+      Company Query:
+      Q: What's our leave policy?
+      A: At Coder's Gyan, we have several types of leave: 12 casual leaves per year (accumulates up to 24), 6 sick leaves (requires medical certificate if more than 3 days), 6 privilege leaves, plus maternity (26 weeks), paternity (7 days), and bereavement leave (5 days). All applications go through the Zoho HR portal...
+
+      General Query:
+      Q: What's the weather in Delhi today?
+      A: (use webSearch to get current weather information)
+
+      Simple Response:
+      Q: Hi
+      A: Hey there! Its Coder's Gyan Assistant How can I help you today?
+
+      IMPORTANT NOTES:
+      - Always prioritize Coder's Gyan related queries with detailed, accurate responses
+      - For general questions, be helpful but concise unless more detail is requested  
+      - Use web search only when you genuinely need current/real-time information
+      - Maintain confidentiality - never share sensitive company information inappropriately
+      - Remember you're representing Coder's Gyan's helpful, student-first culture
+
+      Note: If a question is asked that you don't know the answer to, admit it honestly rather than making something up. And whatever user ask question related to Coder's Gyan, answer them in detail By checking it from the PDF and if answer does not belongs to Tulip then you can answer From the outer Internet. But make sure you are checking the PDF first that answer is related to the Coder's Gyan or not if it is not then you can answer from the outer internet. And do not produce answers with symbols like(*, ^, #, **Example Data**).
+
+      Current date and time: ${new Date().toUTCString()}
+`;
 
     const tools = [
       {
@@ -93,6 +170,24 @@ export async function POST(req: NextRequest) {
               query: {
                 type: "string",
                 description: "The search query to perform.",
+              },
+            },
+            required: ["query"],
+          },
+        },
+      },
+      {
+        type: "function" as const,
+        function: {
+          name: "searchDocuments",
+          description:
+            "Search through uploaded documents and knowledge base for relevant information. Use this for questions about company policies, manuals, uploaded documents, or any content that might be in the knowledge base.",
+          parameters: {
+            type: "object" as const,
+            properties: {
+              query: {
+                type: "string",
+                description: "The search query to find relevant documents.",
               },
             },
             required: ["query"],
@@ -201,6 +296,33 @@ export async function POST(req: NextRequest) {
           const toolResult = tavilyConfigured
             ? await webSearch(functionArgs as { query: string })
             : "Web search isn't available because TAVILY_API_KEY is not configured on the server.";
+
+          messages.push({
+            tool_call_id: toolCall.id,
+            role: "tool",
+            content: toolResult,
+          });
+        } else if (functionName === "searchDocuments") {
+          let functionArgs: { query?: string } = {};
+          try {
+            functionArgs = JSON.parse(toolCall.function.arguments);
+          } catch (_e) {
+            const raw = toolCall.function.arguments || "";
+            const m = raw.match(/"query"\s*:\s*"([^"]+)"/);
+            if (m) functionArgs.query = m[1];
+          }
+          if (!functionArgs.query) {
+            messages.push({
+              tool_call_id: toolCall.id,
+              role: "tool",
+              content:
+                "Error: searchDocuments was called without a valid { query: string } argument.",
+            });
+            continue;
+          }
+          const toolResult = await searchDocuments(
+            functionArgs as { query: string }
+          );
 
           messages.push({
             tool_call_id: toolCall.id,
