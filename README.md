@@ -46,7 +46,8 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 ## Create your API Keys:
 - **Tavily**: [https://app.tavily.com/home](https://app.tavily.com/home)
 - **Google Gemini**: [https://aistudio.google.com/apikey](https://aistudio.google.com/apikey)
-
+- **Pinecone**: [https://www.pinecone.io/start/](https://www.pinecone.io/start/)
+- **OpenAI**: [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys)
 
 ## Tech Stack
 
@@ -60,3 +61,9 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 ## Developed by
 
 [Mo~Jasim](https://www.mojasim.com)
+
+---
+
+## Want to build a similar AI chat system for your company?
+
+Feel free to [contact me](work@mojasim.com) to discuss your requirements and get started!
