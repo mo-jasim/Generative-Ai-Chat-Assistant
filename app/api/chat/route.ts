@@ -17,7 +17,7 @@ const GEMINI_MODEL =
 // Cache chat history for 24 hours
 const conversationCache = new NodeCache({ stdTTL: 60 * 60 * 24 });
 
-// Tool: web search via Tavily
+// web search via Tavily
 async function webSearch({ query }: { query: string }) {
   console.log("Tool Called: webSearch with query:", query);
   try {
@@ -34,7 +34,7 @@ async function webSearch({ query }: { query: string }) {
   }
 }
 
-// Tool: search documents in vector store (RAG)
+// search documents in vector store (RAG)
 async function searchDocuments({ query }: { query: string }) {
   console.log("Tool Called: searchDocuments with query:", query);
   try {
@@ -81,7 +81,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // System prompt for Coder's Gyan AI Assistant
     const systemPrompt = `
       You are Coder's Gyan Assistant, a smart AI assistant built by Mohammad Jasim specifically for Coder's Gyan Company and it's employees and students. You are designed to be helpful, professional, and human-like in your interactions.
 
@@ -125,7 +124,7 @@ export async function POST(req: NextRequest) {
         - Never mention you're an AI unless directly asked
         - Act conversational and engaging
 
-      **TOOL USAGE:**
+      TOOL USAGE:
       You have access to webSearch(query: string) for:
       - Real-time information (weather, current news, stock prices)
       - Recent developments you might not know about
@@ -152,7 +151,7 @@ export async function POST(req: NextRequest) {
       - Maintain confidentiality - never share sensitive company information inappropriately
       - Remember you're representing Coder's Gyan's helpful, student-first culture
 
-      Note: If a question is asked that you don't know the answer to, admit it honestly rather than making something up. And whatever user ask question related to Coder's Gyan, answer them in detail By checking it from the PDF and if answer does not belongs to Tulip then you can answer From the outer Internet. But make sure you are checking the PDF first that answer is related to the Coder's Gyan or not if it is not then you can answer from the outer internet. And do not produce answers with symbols like(*, ^, #, **Example Data**).
+      Note: If a question is asked that you don't know the answer to, admit it honestly rather than making something up. And whatever user ask question related to Coder's Gyan, answer them in detail By checking it from the PDF and if answer does not belongs to Tulip then you can answer From the outer Internet. But make sure you are checking the PDF first that answer is related to the Coder's Gyan or not if it is not then you can answer from the outer internet. And do not produce answers with symbols like(*, ^, #, **Example Data**, asterisk Instead of use bullet points when it is required because you are never ever required to use asterisk).
 
       Current date and time: ${new Date().toUTCString()}
 `;
